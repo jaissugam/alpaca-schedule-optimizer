@@ -41,8 +41,6 @@ def check_slot_compatibility(slot1_start: str, slot1_end: str,
 
 # Generate optimized schedule options for a clinician
 def generate_schedule_options(clinician_id: str) -> List[ScheduleOption]:
-    
-    # Finding clinician
     clinician = next((c for c in clinicians if c["id"] == clinician_id), None)
     if not clinician:
         raise HTTPException(status_code=404, detail="Clinician not found")
@@ -52,7 +50,7 @@ def generate_schedule_options(clinician_id: str) -> List[ScheduleOption]:
     max_clients_per_day = clinician["max_clients_per_day"]
     
     # Generating all possible combinations of client assignments
-    for day in range(1, 6):  # Monday to Friday
+    for day in range(1, 6): 
         clinician_day_slots = [a for a in clinician["availabilities"] 
                              if a["day_of_the_week"] == day]
         if not clinician_day_slots:
