@@ -15,6 +15,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [scheduleOptions, setScheduleOptions] = useState<ScheduleOption[] | null>(null);
+  const [selectedScheduleIndex, setSelectedScheduleIndex] = useState<number | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,9 +25,9 @@ export default function Home() {
 
     try {
       const options = await getScheduleByAddress(address);
-      // Limit to top 10 options
+      // Limiting to top 10 options
       setScheduleOptions(options.slice(0, 10));
-      // Save to sessionStorage for detail page
+      // Saving to sessionStorage for detail page
       sessionStorage.setItem('scheduleOptions', JSON.stringify(options.slice(0, 10)));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch schedule options');
@@ -41,6 +42,10 @@ export default function Home() {
       ...prev,
       [name]: value
     }));
+  };
+
+  const handleScheduleSelect = (index: number) => {
+    setSelectedScheduleIndex(index === selectedScheduleIndex ? null : index);
   };
 
   return (
@@ -119,7 +124,13 @@ export default function Home() {
         <div className="mt-8 w-full max-w-2xl space-y-4">
           <h2 className="text-xl font-bold mb-4">Available Schedule Options</h2>
           {scheduleOptions.map((option, index) => (
-            <ScheduleBadge key={index} option={option} index={index} />
+            <ScheduleBadge 
+              key={index} 
+              option={option} 
+              index={index}
+              isSelected={index === selectedScheduleIndex}
+              onSelect={() => handleScheduleSelect(index)}
+            />
           ))}
         </div>
       )}
