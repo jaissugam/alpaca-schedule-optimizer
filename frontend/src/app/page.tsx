@@ -121,17 +121,19 @@ export default function Home() {
       )}
 
       {scheduleOptions && (
-        <div className="mt-8 w-full max-w-2xl space-y-4">
+        <div className="mt-8 w-full max-w-7xl">
           <h2 className="text-xl font-bold mb-4">Available Schedule Options</h2>
-          {scheduleOptions.map((option, index) => (
-            <ScheduleBadge 
-              key={index} 
-              option={option} 
-              index={index}
-              isSelected={index === selectedScheduleIndex}
-              onSelect={() => handleScheduleSelect(index)}
-            />
-          ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {scheduleOptions.map((option, index) => (
+              <ScheduleBadge 
+                key={index} 
+                option={option} 
+                index={index}
+                isSelected={index === selectedScheduleIndex}
+                onSelect={() => handleScheduleSelect(index)}
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>
