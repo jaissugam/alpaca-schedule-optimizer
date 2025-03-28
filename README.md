@@ -1,79 +1,55 @@
-# Alpaca Health Software Engineering Take-Home Project
+# Alpaca Health Platform - Client Schedule Optimizer
 
-### Project Description
+Full-stack application for optimizing clinician-client schedule matching based on availability and location.
 
-Visit this link for details:
-[https://harviio.notion.site/Alpaca-Health-Eng-Take-home-Project-1411bfc50b90803382d4cae01f9bcf18?pvs=4](https://www.notion.so/harviio/ABA-Session-Note-Generator-Take-Home-Project-1411bfc50b90803382d4cae01f9bcf18?pvs=4)
+## Tech Stack
 
-## Setup Instructions
+- Frontend: Next.js 14, TypeScript, Tailwind CSS
+- Backend: FastAPI 0.115.12 (Python 3.11)
+- DB: In-memory for POC
 
-### Backend Setup (Python 3.11+ required)
+## Key Features
 
+- Address-based clinician lookup
+- Schedule optimization for maximum hours
+- Travel time optimization
+- Top 10 schedule options display
+- Detailed daily schedule view
+
+## Quick Start
+
+Backend:
 ```bash
-# Create and activate virtual environment
-python -m venv alpaca_venv
-source alpaca_venv/bin/activate  # or `venv\Scripts\activate` on Windows
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Start the server
-fastapi dev main.py
+# Requires Python 3.11+
+pip install "fastapi==0.115.12" "uvicorn[standard]"
+uvicorn main:app --reload --port 8000
 ```
 
-### Frontend Setup (Node.js 18+ required)
-
+Frontend:
 ```bash
-# Navigate to frontend directory
-cd frontend
-
-# Install dependencies
 npm install
-
-# Start the development server
 npm run dev
 ```
 
-The application will be available at:
+## Design Highlights
 
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8000
-- API Documentation: http://localhost:8000/docs
+- RESTful API with CORS support
+- React state management (no external state library)
+- Progressive UI disclosure
+- Native emoji icons for minimal dependencies
 
-## Default Project Structure
+## Assumptions
 
-- `frontend/`: Next.js application
-  - `src/components/`: Reusable React components
-  - `src/app/`: Next.js app router pages
-- `backend/`: FastAPI application
-  - `app/main.py`: API endpoints
+- Monday-Friday scheduling
+- Pre-calculated drive times
+- Valid addresses in system
+- Maximum clients per day limit
 
-## Development
+## Future Improvements
 
-- Frontend runs on port 3000 with hot reload enabled
-- Backend runs on port 8000 with auto-reload enabled
-- API documentation available at http://localhost:8000/docs
+1. Unit testing
+2. Address lookup caching
+3. Enhanced error handling
+4. Loading animations
+5. Schedule pagination
 
-## Submission
-
-1. Create a private GitHub repository
-2. Implement your solution
-3. Document any assumptions or trade-offs
-4. Include instructions for running your solution
-5. Send us the repository link
-
-## Time Expectation
-
-- Expected time: 3-4 hours
-- Please don't spend more than 6 hours
-
-## Evaluation Criteria
-
-| Category | Details | Weight |
-|----------|---------|--------|
-| Product sense and scoping | - Final product decisions alignment with requirements<br>- Appropriate deprioritization of non-crucial parts | 10% |
-| Technology selection | - Right tools chosen for the job | 10% |
-| Technical Level | - Well-organized and intuitive code structure<br>- Modular code (e.g., React components used)<br>- Proper use of React hooks<br>- Good state management<br>- Correct use of useEffect hooks | 40% |
-| Craft and Quality | - Usable and intuitive UI/UX<br>- Presence and severity of bugs | 20% |
-| Documentation | - Clear communication of logic and technical decisions in README | 10% |
-| Testing | - Presence of tests<br>- Quality and robustness of tests | 10% |
