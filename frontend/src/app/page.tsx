@@ -1,6 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import { getScheduleByAddress } from '@/api/schedule';
+import type { ScheduleOption } from '@/types/schedule';
+import { ScheduleBadge } from '@/components/ScheduleBadge';
 
 export default function Home() {
   const [address, setAddress] = useState({
@@ -9,11 +12,27 @@ export default function Home() {
     state: '',
     zip_code: ''
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [scheduleOptions, setScheduleOptions] = useState<ScheduleOption[] | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Submitted address:', address);
-    // Handle form submission here
+    setLoading(true);
+    setError(null);
+    setScheduleOptions(null);
+
+    try {
+      const options = await getScheduleByAddress(address);
+      // Limit to top 10 options
+      setScheduleOptions(options.slice(0, 10));
+      // Save to sessionStorage for detail page
+      sessionStorage.setItem('scheduleOptions', JSON.stringify(options.slice(0, 10)));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch schedule options');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,8 +44,8 @@ export default function Home() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-8 bg-white text-black">
-      <h1 className="text-3xl font-bold mb-8 text-black">Compatible Client Schedules</h1>
+    <div className="flex min-h-screen flex-col items-center p-8 bg-white text-black">
+      <h1 className="text-3xl font-bold mb-8">Compatible Client Schedules</h1>
       
       <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-4">
         <div className="flex flex-col gap-2">
@@ -83,11 +102,27 @@ export default function Home() {
 
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
+          disabled={loading}
+          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors disabled:bg-blue-300"
         >
-          Submit
+          {loading ? 'Loading...' : 'Submit'}
         </button>
       </form>
+
+      {error && (
+        <div className="mt-4 p-4 bg-red-100 text-red-700 rounded-md w-full max-w-lg">
+          {error}
+        </div>
+      )}
+
+      {scheduleOptions && (
+        <div className="mt-8 w-full max-w-2xl space-y-4">
+          <h2 className="text-xl font-bold mb-4">Available Schedule Options</h2>
+          {scheduleOptions.map((option, index) => (
+            <ScheduleBadge key={index} option={option} index={index} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
